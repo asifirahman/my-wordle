@@ -1,18 +1,24 @@
-import React, { useState, createContext } from 'react';
+import React, { useState, createContext, useEffect } from 'react';
 import './style.css';
 import Board from './components/Board';
 import Keyboard from './components/Keyboard';
-import { boardDefaultValue } from './utils/boardDefaultVal';
+import { boardDefaultValue, generateWordSet } from './utils/boardDefaultVal';
 
 export const AppContext = createContext();
 
 export default function App() {
   const [wordsHolder, setWordsHolder] = useState(boardDefaultValue);
+  const [wordSet, setWordSet] = useState(new Set())
   const [currentAttempt, setCurrentAttempt] = useState({
     attempt: 0,
     letterPosition: 0,
   });
   const correctWord = 'ANIMAL';
+
+  useEffect(() => {
+    setWordSet(generateWordSet())
+  }, [])
+
 
   const onSelectLetter = (keyValue) => {
     if (currentAttempt.letterPosition > 5) return;
@@ -29,10 +35,24 @@ export default function App() {
   const onEnter = () => {
     if (currentAttempt.letterPosition != 6 || currentAttempt.attempt == 8)
       return;
-    setCurrentAttempt({
-      letterPosition: 0,
-      attempt: currentAttempt.attempt + 1,
-    });
+
+    let currentWord = ''
+    for(let i = 0; i< 6; i++){
+      currentWord += wordsHolder[currentAttempt.attempt][i]
+    }
+    if(wordSet.has(currentWord)) {
+      setCurrentAttempt({
+        letterPosition: 0,
+        attempt: currentAttempt.attempt + 1,
+      });
+    } else {
+      alert("Word not found!!!")
+    }
+
+    if(currentWord === correctWord) {
+      alert("You Won!!!")
+    }
+    
   };
 
   const onDelete = () => {
