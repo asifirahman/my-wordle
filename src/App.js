@@ -13,7 +13,7 @@ export default function App() {
     attempt: 0,
     letterPosition: 0,
   });
-  const correctWord = 'ANIMAL';
+  const correctWord = 'RIVERS';
 
   useEffect(() => {
     setWordSet(generateWordSet())
